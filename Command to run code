@@ -1,0 +1,10 @@
+open dbeaver
+connected to the database
+run the  "script-5.sql" script in dbeaver
+database is setup
+go to https://dev.mysql.com/downloads/connector/j/ and download the driver and extract it copy extracted path to .jar file
+in vscode hit ctrl + shift + p and enter "Java Configure classpath"
+go to the libraries tab and add the .jar file, click apply.
+in the vscode terminal enter java -cp ".;C:\path\to\mysql-connector-j-9.5.0.jar" Main
+Replace C:\path\to\ with the actual folder where your JAR is saved (e.g. C:\Users\Yash\Downloads\mysql-connector-j-9.5.0.jar).
+code should be running with connection to the database.
