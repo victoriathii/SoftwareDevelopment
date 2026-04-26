@@ -44,20 +44,21 @@ public class ReportDAO implements IReportDAO {
     @Override
     public List<String> getMonthlyPayByJobTitle(int month, int year) {
         List<String> results = new ArrayList<>();
-
-        String sql = "SELECT jobTitle, SUM(salary) AS totalPay "
-                   + "FROM employee "
-                   + "WHERE MONTH(hireDate) <= ? AND YEAR(hireDate) <= ? "
-                   + "GROUP BY jobTitle";
-
+ 
+        String sql = "SELECT e.jobTitle, SUM(p.newSalary) AS totalPay "
+                   + "FROM employee e "
+                   + "JOIN payhistory p ON e.empId = p.empId "
+                   + "WHERE MONTH(p.effectiveDate) = ? AND YEAR(p.effectiveDate) = ? "
+                   + "GROUP BY e.jobTitle";
+ 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+ 
             stmt.setInt(1, month);
             stmt.setInt(2, year);
-
+ 
             ResultSet rs = stmt.executeQuery();
-
+ 
             while (rs.next()) {
                 String line = String.format(
                     "Job Title: %s | Total Pay: %.2f",
@@ -66,11 +67,11 @@ public class ReportDAO implements IReportDAO {
                 );
                 results.add(line);
             }
-
+ 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+ 
         return results;
     }
 
