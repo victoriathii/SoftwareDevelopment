@@ -20,7 +20,7 @@ A JavaFX-based graphical user interface for the Employee Management System that 
 
 - Java 17 or higher
 - JavaFX 17+ (separate download required for Java 11+)
-- MySQL database (configured in DBConnection.java)
+- SQLite database (configured in DBConnection.java)
 
 ## JavaFX Setup
 

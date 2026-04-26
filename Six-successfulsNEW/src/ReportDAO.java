@@ -1,9 +1,10 @@
 package src;
-// data access layer for all reporting features
-// It implements IReportDAO and performs SQL queries that:
-// - Retrieve employee pay history
-// - Calculate monthly pay totals grouped by job title
-// - Calculate monthly pay totals grouped by division
+
+// Handles all reporting queries for the Employee Management System.
+// Provides:
+// - Employee pay history
+// - Monthly pay grouped by job title
+// - Monthly pay grouped by division
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,12 +18,12 @@ public class ReportDAO implements IReportDAO {
     public List<String> getEmployeePayHistory(int empId) {
         List<String> results = new ArrayList<>();
 
-        String sql = "SELECT e.empId, e.firstName, e.lastName, p.effectiveDate, "
-                   + "p.oldSalary, p.newSalary, p.changeReason "
-                   + "FROM employee e "
-                   + "JOIN payhistory p ON e.empId = p.empId "
-                   + "WHERE e.empId = ? "
-                   + "ORDER BY p.effectiveDate DESC";
+        String sql = """
+            SELECT hireDate, salary
+            FROM employees
+            WHERE empId = ?
+            ORDER BY hireDate ASC
+        """;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -31,13 +32,8 @@ public class ReportDAO implements IReportDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String line = String.format(
-                    "Date: %s | Old: %.2f | New: %.2f | Reason: %s",
-                    rs.getDate("effectiveDate"),
-                    rs.getDouble("oldSalary"),
-                    rs.getDouble("newSalary"),
-                    rs.getString("changeReason")
-                );
+                String line = "Date: " + rs.getString("hireDate")
+                            + " | Salary: $" + rs.getDouble("salary");
                 results.add(line);
             }
 
@@ -52,25 +48,25 @@ public class ReportDAO implements IReportDAO {
     public List<String> getMonthlyPayByJobTitle(int month, int year) {
         List<String> results = new ArrayList<>();
 
-        String sql = "SELECT jobTitle, SUM(salary) AS totalPay "
-                   + "FROM employee "
-                   + "WHERE MONTH(hireDate) <= ? AND YEAR(hireDate) <= ? "
-                   + "GROUP BY jobTitle";
+        String sql = """
+            SELECT jobTitle, SUM(salary) AS totalPay
+            FROM employees
+            WHERE strftime('%m', hireDate) = printf('%02d', ?)
+              AND strftime('%Y', hireDate) = ?
+            GROUP BY jobTitle
+        """;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, month);
-            stmt.setInt(2, year);
+            stmt.setString(2, String.valueOf(year));
 
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String line = String.format(
-                    "Job Title: %s | Total Pay: %.2f",
-                    rs.getString("jobTitle"),
-                    rs.getDouble("totalPay")
-                );
+                String line = rs.getString("jobTitle")
+                             + " — Total Pay: $" + rs.getDouble("totalPay");
                 results.add(line);
             }
 
@@ -85,25 +81,25 @@ public class ReportDAO implements IReportDAO {
     public List<String> getMonthlyPayByDivision(int month, int year) {
         List<String> results = new ArrayList<>();
 
-        String sql = "SELECT division, SUM(salary) AS totalPay "
-                   + "FROM employee "
-                   + "WHERE MONTH(hireDate) <= ? AND YEAR(hireDate) <= ? "
-                   + "GROUP BY division";
+        String sql = """
+            SELECT division, SUM(salary) AS totalPay
+            FROM employees
+            WHERE strftime('%m', hireDate) = printf('%02d', ?)
+              AND strftime('%Y', hireDate) = ?
+            GROUP BY division
+        """;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, month);
-            stmt.setInt(2, year);
+            stmt.setString(2, String.valueOf(year));
 
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String line = String.format(
-                    "Division: %s | Total Pay: %.2f",
-                    rs.getString("division"),
-                    rs.getDouble("totalPay")
-                );
+                String line = rs.getString("division")
+                             + " — Total Pay: $" + rs.getDouble("totalPay");
                 results.add(line);
             }
 

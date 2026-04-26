@@ -1,19 +1,21 @@
 package src;
-// UI layer of application
-// responsible for:
-// - displaying the menu and prompts to the user
-// - reading user input
-// - calling the appropriate service methods based on user choices
+
+// UI layer of the Employee Management System
+// Responsibilities:
+// - Displaying the menu and prompts
+// - Reading user input
+// - Calling service-layer methods for each task
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-
-
 public class Main {
 
     public static void main(String[] args) {
+
+        // Ensure SQLite tables exist before anything else
+        SetupDatabase.initialize();
 
         Scanner inputDevice = new Scanner(System.in);
 
@@ -79,7 +81,7 @@ public class Main {
     }
 
     // ============================
-    // INSERT EMPLOYEE (TASK 1)
+    // TASK 1 — INSERT EMPLOYEE
     // ============================
     private static void insertEmployee(Scanner inputDevice, IEmployeeService employeeService) {
         try {
@@ -127,7 +129,7 @@ public class Main {
     }
 
     // ============================
-    // SEARCH EMPLOYEE (TASK 2)
+    // TASK 2 — SEARCH EMPLOYEE
     // ============================
     private static void searchEmployee(Scanner inputDevice, IEmployeeService employeeService) {
         try {
@@ -158,7 +160,7 @@ public class Main {
     }
 
     // ============================
-    // UPDATE EMPLOYEE (TASK 3)
+    // TASK 3 — UPDATE EMPLOYEE
     // ============================
     private static void updateEmployee(Scanner inputDevice, IEmployeeService employeeService) {
         try {
@@ -206,7 +208,7 @@ public class Main {
     }
 
     // ============================
-    // UPDATE SALARY RANGE (TASK 4)
+    // TASK 4 — UPDATE SALARY RANGE
     // ============================
     private static void updateSalaryRange(Scanner inputDevice, IEmployeeService employeeService) {
         try {
@@ -229,7 +231,7 @@ public class Main {
     }
 
     // ============================
-    // REPORT 1 — PAY HISTORY (TASK 5)
+    // TASK 5 — PAY HISTORY REPORT
     // ============================
     private static void employeePayHistory(Scanner inputDevice, IReportService reportService) {
         try {
@@ -251,7 +253,7 @@ public class Main {
     }
 
     // ============================
-    // REPORT 2 — PAY BY JOB TITLE
+    // TASK 6 — MONTHLY PAY BY JOB TITLE
     // ============================
     private static void monthlyPayByJobTitle(Scanner inputDevice, IReportService reportService) {
         try {
@@ -276,7 +278,7 @@ public class Main {
     }
 
     // ============================
-    // REPORT 3 — PAY BY DIVISION
+    // TASK 7 — MONTHLY PAY BY DIVISION
     // ============================
     private static void monthlyPayByDivision(Scanner inputDevice, IReportService reportService) {
         try {

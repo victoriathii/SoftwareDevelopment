@@ -17,7 +17,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 
     @Override
     public boolean insertEmployee(Employee employee) {
-        String sql = "INSERT INTO employee "
+        String sql = "INSERT INTO employees "
                    + "(firstName, lastName, ssn, jobTitle, division, salary, address, hireDate) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -49,11 +49,11 @@ public class EmployeeDAO implements IEmployeeDAO {
         String sql;
 
         if (searchInput.matches("\\d{9}")) {
-            sql = "SELECT * FROM employee WHERE ssn = ?";
+            sql = "SELECT * FROM employees WHERE ssn = ?";
         } else if (searchInput.matches("\\d+")) {
-            sql = "SELECT * FROM employee WHERE empId = ?";
+            sql = "SELECT * FROM employees WHERE empId = ?";
         } else {
-            sql = "SELECT * FROM employee WHERE firstName LIKE ? OR lastName LIKE ?";
+            sql = "SELECT * FROM employees WHERE firstName LIKE ? OR lastName LIKE ?";
         }
 
         try (Connection connection = DBConnection.getConnection();
@@ -96,7 +96,7 @@ public class EmployeeDAO implements IEmployeeDAO {
     @Override
     public boolean updateEmployee(Employee employee) {
 
-        StringBuilder sql = new StringBuilder("UPDATE employee SET ");
+        StringBuilder sql = new StringBuilder("UPDATE employees SET ");
         List<Object> params = new ArrayList<>();
 
         if (employee.getFirstName() != null) {
@@ -165,7 +165,7 @@ public class EmployeeDAO implements IEmployeeDAO {
     @Override
     public int updateSalaryRange(double percentage, double minSalary, double maxSalary) {
 
-        String sql = "UPDATE employee "
+        String sql = "UPDATE employees "
                    + "SET salary = salary + (salary * ? / 100) "
                    + "WHERE salary >= ? AND salary < ?";
 

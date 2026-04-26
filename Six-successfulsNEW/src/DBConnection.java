@@ -1,7 +1,7 @@
 package src;
-// creates a single reusable method (getConnection()) that
-// opens a connection from Java program to MySQL database
-// called employeeData.
+
+// Provides a single shared method for obtaining a SQLite database connection.
+// Uses employeeData.db located in the project directory.
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,14 +9,26 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String URL =
-        "jdbc:mysql://localhost:3306/employeeData?allowPublicKeyRetrieval=true&useSSL=false";
-    private static final String USER =
-        System.getenv().getOrDefault("EMPLOYEE_DB_USER", "root");
-    private static final String PASSWORD =
-        System.getenv().getOrDefault("EMPLOYEE_DB_PASSWORD", "");
+    private static final String URL = "jdbc:sqlite:employeeData.db";
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    static {
+        try {
+            // Load SQLite JDBC driver
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            System.out.println("SQLite JDBC driver not found.");
+            e.printStackTrace();
+        }
+    }
+
+    // Returns a connection to the SQLite database
+    public static Connection getConnection() {
+        try {
+            return DriverManager.getConnection(URL);
+        } catch (SQLException e) {
+            System.out.println("Failed to connect to SQLite database.");
+            e.printStackTrace();
+            return null;
+        }
     }
 }
