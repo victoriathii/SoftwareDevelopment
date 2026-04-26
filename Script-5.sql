@@ -4,7 +4,7 @@ create database employeeData;
 use employeeData;
 
 
-CREATE TABLE employees (
+CREATE TABLE employee (
   empId INT AUTO_INCREMENT,
   firstName VARCHAR(65) NOT NULL,
   lastName VARCHAR(65) NOT NULL,
