@@ -81,7 +81,17 @@ public class EmployeeDAO implements IEmployeeDAO {
                 employee.setDivision(rs.getString("division"));
                 employee.setSalary(rs.getDouble("salary"));
                 employee.setAddress(rs.getString("address"));
-                employee.setHireDate(rs.getDate("hireDate").toLocalDate());
+                String dateString = rs.getString("hireDate");
+                if (dateString != null) {
+                    // If it's stored as a long number (milliseconds), we convert it
+                    if (dateString.matches("\\d+")) {
+                        long millis = Long.parseLong(dateString);
+                        employee.setHireDate(new java.sql.Date(millis).toLocalDate());
+                    } else {
+                    // If it's stored as a standard string YYYY-MM-DD
+                    employee.setHireDate(LocalDate.parse(dateString));
+                    }
+                }
 
                 results.add(employee);
             }
