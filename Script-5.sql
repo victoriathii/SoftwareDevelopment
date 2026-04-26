@@ -16,3 +16,14 @@ CREATE TABLE employee (
   hireDate DATE,
   PRIMARY KEY (empid) 
 );
+
+CREATE TABLE payhistory (
+  historyId     INT AUTO_INCREMENT,
+  empId         INT            NOT NULL,
+  effectiveDate DATE           NOT NULL,
+  oldSalary     DECIMAL(10,2)  NOT NULL,
+  newSalary     DECIMAL(10,2)  NOT NULL,
+  changeReason  VARCHAR(255),
+  PRIMARY KEY (historyId),
+  FOREIGN KEY (empId) REFERENCES employee(empId)
+);
