@@ -59,7 +59,7 @@ public class EmployeeService implements IEmployeeService {
     public List<Employee> searchEmployee(String searchInput) throws Exception {
 
         if (searchInput == null || searchInput.isBlank()) {
-            throw new Exception("Search input cannot be empty.");
+            return employeeDAO.searchEmployee("");
         }
 
         return employeeDAO.searchEmployee(searchInput.trim());
