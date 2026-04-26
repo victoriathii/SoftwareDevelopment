@@ -493,9 +493,9 @@ public class EmployeeManagementGUI extends Application {
 
     private void refreshEmployeeTable() {
         try {
-            // For now, clear the table. In a real app, you might want to reload all employees
-            // or keep the current search results
-            employeeTable.setItems(FXCollections.observableArrayList());
+            // Fetch all employees (using an empty search string)
+            List<Employee> allEmployees = employeeService.searchEmployee(""); 
+            employeeTable.setItems(FXCollections.observableArrayList(allEmployees));
         } catch (Exception ex) {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to refresh table: " + ex.getMessage());
         }
