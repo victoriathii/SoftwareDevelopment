@@ -117,7 +117,7 @@ public class EmployeeDAO implements IEmployeeDAO {
             params.add(employee.getDivision());
         }
 
-        if (employee.getSalary() > 0) {
+        if (employee.getSalary() >= 0) {
             sql.append("salary = ?, ");
             params.add(employee.getSalary());
         }
